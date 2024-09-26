@@ -3,9 +3,9 @@ import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
     const links = <>
-        <NavLink to="/"><li><a>Home</a></li></NavLink>
-        <NavLink to="/signIn"><li><a>Sign In</a></li></NavLink>
-        <NavLink to="/signUp"><li><a>Sign Up</a></li></NavLink>
+        <li><NavLink to="/">Home</NavLink></li>
+        <li><NavLink to="/signIn">Sign In</NavLink></li>
+        <li><NavLink to="/signUp">Sign Up</NavLink></li>
     </>
     return (
         <div className="navbar bg-base-100">
@@ -31,7 +31,7 @@ const NavBar = () => {
                         {links}
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">daisyUI</a>
+                <a className="btn btn-ghost text-xl">Email Validation</a>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
