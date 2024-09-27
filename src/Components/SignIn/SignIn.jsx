@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 
 
 const SignIn = () => {
+
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const emailRef = useRef(null);
-
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -27,8 +27,10 @@ const SignIn = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then(result => {
                 console.log(result.user);
+                if (!result.user.emailVerified) {
+                    alert('Please verify your Email first')
+                }
                 setSuccess('Sign in successfully')
-
             })
             .catch(error => {
                 console.error(error);
@@ -50,8 +52,6 @@ const SignIn = () => {
                 console.log(error);
 
             })
-
-
     }
 
     return (
@@ -81,13 +81,14 @@ const SignIn = () => {
                                 <a onClick={handleForgetPass} href="#" className="label-text-alt link link-hover">Forgot password?</a>
                             </label>
                         </div>
+                        
                         {
                             error && <p className="text-red-700">{error}</p>
                         }
                         {
                             success && <p className="text-green-700">{success}</p>
                         }
-                        <p>If you do not have account please <Link className="underline text-blue-700" to="/signUp">Sign up</Link> now</p>
+                        <p>If you do not have account please <Link className="underline text-blue-700" to="/signUp">Sign up</Link></p>
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Sign in</button>
                         </div>

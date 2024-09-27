@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -12,7 +12,9 @@ const SignUp = () => {
 
         const email = e.target.email.value;
         const password = e.target.password.value;
-        console.log(email, password);
+        const name = e.target.name.value;
+        const accepted = e.target.terms.checked;
+        console.log(email, password, name, accepted);
 
         // reset 
         setError('');
@@ -26,6 +28,10 @@ const SignUp = () => {
             setError('Password should be at least 1 capital letter')
             return;
         }
+        else if (!accepted) {
+            setError('Please fill our terms and condition')
+            return;
+        }
 
         createUserWithEmailAndPassword(auth, email, password)
             .then(result => {
@@ -33,8 +39,14 @@ const SignUp = () => {
                 setSuccess('Account created successfully')
                 sendEmailVerification(result.user)
                     .then(() => {
-                        alert('Please check your email')
+                        alert('Please check your email for verify')
                     })
+                updateProfile(result.user, {
+                    displayName: name,
+                    photoURL: "https://example.com/jane-q-user/profile.jpg"
+                })
+                    .then()
+                    .catch()
             })
             .catch(error => {
                 console.log(error);
@@ -56,6 +68,12 @@ const SignUp = () => {
                     <form onSubmit={handleSubmit} className="card-body">
                         <div className="form-control">
                             <label className="label">
+                                <span className="label-text">Name</span>
+                            </label>
+                            <input type="text" name="name" placeholder="name" className="input input-bordered" required />
+                        </div>
+                        <div className="form-control">
+                            <label className="label">
                                 <span className="label-text">Email</span>
                             </label>
                             <input type="email" name="email" placeholder="email" className="input input-bordered" required />
@@ -66,13 +84,17 @@ const SignUp = () => {
                             </label>
                             <input type="password" name="password" placeholder="password" className="input input-bordered" required />
                         </div>
+                        <div>
+                            <input type="checkbox" name="terms" id="terms" />
+                            <label className="ml-2" htmlFor="terms">Accept our <a href="">Terms and Condition</a></label>
+                        </div>
                         {
                             error && <p className="text-red-700">{error}</p>
                         }
                         {
                             success && <p className="text-green-700">{success}</p>
                         }
-                        <p>If you already have an account please <Link className="underline text-blue-700" to="/signIn">Sign in</Link> now</p>
+                        <p>If you already have an account please <Link className="underline text-blue-700" to="/signIn">Sign in</Link></p>
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Sign Up</button>
                         </div>
